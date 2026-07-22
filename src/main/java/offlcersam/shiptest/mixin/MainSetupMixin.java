@@ -3,6 +3,7 @@ package offlcersam.shiptest.mixin;
 import offlcersam.shiptest.MarketRegistrar;
 import offlcersam.shiptest.ShipRegistrar;
 import game.Main;
+import offlcersam.shiptest.WeaponLayoutList;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,9 +20,17 @@ public class MainSetupMixin {
                     shift = At.Shift.AFTER
             )
     )
-    private void shiptest$registerShips(CallbackInfo ci) {
-        ShipRegistrar.registerShips();
-    }
+    private void shiptest$registerShips(CallbackInfo ci) {ShipRegistrar.registerShips();}
+
+    @Inject(
+            method = "setup",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lgame/weapons/WeaponSlotLayoutList;init()V",
+                    shift = At.Shift.AFTER
+            )
+    )
+    private void shiptest$registerWeaponLayouts(CallbackInfo ci) {WeaponLayoutList.init();}
 
     @Inject(
             method = "setup",

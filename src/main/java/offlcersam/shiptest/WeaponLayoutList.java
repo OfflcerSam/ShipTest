@@ -1,5 +1,6 @@
 package offlcersam.shiptest;
 
+import game.weapons.WeaponSlotLayoutList;
 import illuminatus.core.datastructures.List;
 import mods.ModLogger;
 import game.weapons.WeaponTurretPlacement;
@@ -12,54 +13,38 @@ public class WeaponLayoutList {
 
 
     // Trying to mimic vanilla WeaponSlotLayoutList for fun
-    public static List<WeaponTurretPlacement> layouts;
     private static WeaponTurretPlacement placement;
-    public static WeaponTurretPlacement ZERO;
-
-    static {ZERO = new WeaponTurretPlacement();}
 
     public static void init() {
-        layouts = new List();
         ModLogger.log("[ShipTest] Loading custom weapon layouts...");
 
         placement = new WeaponTurretPlacement(); // Make variable new.
-        placement.addSlot(-66.0, 21.0); // Add a slot with angle and distance from center of sprite.
-        placement.addSlot(66.0, 21.0);
-        placement.addSlot(-55.0, 16.0);
-        placement.addSlot(55.0, 16.0);
-        ARROWHEAD_LAYOUT = layouts.add(placement); // Add placements to layout.
+        placement.addSlot(32.5, -9.2); // Add a slot with angle and distance from center. Treat it as 0,0 on a graph.
+        placement.addSlot(-32.5, -9.2);
+        placement.addSlot(0.0, -6.0);
+        ARROWHEAD_LAYOUT = WeaponSlotLayoutList.layouts.add(placement); // Add placements to layout.
 
-        placement = new WeaponTurretPlacement(); // Make variable new.
-        placement.addSlot(-45.0, 45.0); // Add a slot with angle and distance from center of sprite.
-        placement.addSlot(45.0, 45.0);
-        placement.addSlot(-30.0, 35.0);
-        placement.addSlot(30.0, 35.0);
-        placement.addSlot(-18.0, 50.0);
-        placement.addSlot(18.0, 50.0);
-        placement.addSlot(0.0, 50.0);
-        FOUNDRY_LAYOUT = layouts.add(placement); // Add placements to layout.
+        //these are a bit lazied but its whatever
+        placement = new WeaponTurretPlacement();
+        placement.addSlot(49.0, 49.5);
+        placement.addSlot(-49.5, 50.0);
+        placement.addSlot(20.5, 34.5);
+        placement.addSlot(-21.5, 35.0);
+        placement.addSlot(20.7, 52.5);
+        placement.addSlot(-20.0, 51.5);
+        FOUNDRY_LAYOUT = WeaponSlotLayoutList.layouts.add(placement);
 
-        placement = new WeaponTurretPlacement(); // Make variable new.
-        placement.addSlot(-45.0, 45.0); // Add a slot with angle and distance from center of sprite.
-        placement.addSlot(45.0, 45.0);
-        placement.addSlot(-30.0, 35.0);
-        placement.addSlot(30.0, 35.0);
-        placement.addSlot(-18.0, 50.0);
-        placement.addSlot(18.0, 50.0);
-        FOUNDRY_PLUS_LAYOUT = layouts.add(placement); // Add placements to layout.
+        placement = new WeaponTurretPlacement();
+        placement.addSlot(49.0, 49.5);
+        placement.addSlot(-49.5, 50.0);
+        placement.addSlot(20.5, 34.5);
+        placement.addSlot(-21.5, 35.0);
+        placement.addSlot(20.7, 52.5);
+        placement.addSlot(-20.0, 51.5);
+        placement.addSlot(-0.2, 50.0);
+        FOUNDRY_PLUS_LAYOUT = WeaponSlotLayoutList.layouts.add(placement);
 
 
-        ModLogger.log("[ShipTest] Loaded: " + layouts.size() + " custom layouts.");
-    }
-
-    public static WeaponTurretPlacement get(int index) {
-        if (index < 0) {
-            return ZERO;
-        }
-        return layouts.get(index);
-    }
-
-    public static int getWeaponSlotCount(int index) {
-        return WeaponLayoutList.get(index).getSlotCount();
+        ModLogger.log("[ShipTest] Loaded custom weapon layouts, next index: " + WeaponSlotLayoutList.layouts.size());
     }
 }

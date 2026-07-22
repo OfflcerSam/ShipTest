@@ -22,7 +22,7 @@ public class WeaponLayoutList {
         placement.addSlot(32.5, -9.2); // Add a slot with angle and distance from center. Treat it as 0,0 on a graph.
         placement.addSlot(-32.5, -9.2);
         placement.addSlot(0.0, -6.0);
-        ARROWHEAD_LAYOUT = WeaponSlotLayoutList.layouts.add(placement); // Add placements to layout.
+        ARROWHEAD_LAYOUT = WeaponSlotLayoutList.layouts.add(placement); // Add placements to vanilla layout list.
 
         //these are a bit lazied but its whatever
         placement = new WeaponTurretPlacement();

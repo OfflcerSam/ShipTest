@@ -9,7 +9,6 @@ import mods.ModLogger;
 import java.util.ArrayList;
 import java.util.List;
 
-import static game.weapons.WeaponSlotLayoutList.*;
 import static offlcersam.shiptest.WeaponLayoutList.*;
 
 public final class ShipRegistrar {

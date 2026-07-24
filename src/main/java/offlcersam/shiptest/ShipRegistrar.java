@@ -74,14 +74,14 @@ public final class ShipRegistrar {
         float carg = 75.0F * cargoMod;
 
         writeShip(
-                350,
-                30,                        // Int: Icon, sets Icon according to sprite sheet.
+                350,                         //Int: ID, unique ship ID
+                30,                             // Int: Icon, sets Icon according to sprite sheet.
                 Color.AZURE,                    // Color: Color, unsure what exactly this affects.
                 "Arrowhead",                    // String: Display name
                 "Maybe one day you could be a real arrow.", // String: Display description
                 0,                              // Int: Tier, affects spawning and what level it's usable at.
                 TypeTag.UNCOMMON,               // TypeTag, Affects spawning and loot drop, I think.
-                350,                            // Int: Render Index, the ship's sprite
+                350,                            // Int: Render Index, the ship's sprite, currently there is a index limit somewhere near 350-400 until it is upped.
                 37,                             // Int: Engine Position glow in pixels
                 integ * 1.50F,                  // Float: Hull HP (integ * multiplier), somewhat based off ShipList style of doing it.
                 carg * 1.10F,                   // Float: Cargo (carg * multiplier), also based off ShipList style of doing it.

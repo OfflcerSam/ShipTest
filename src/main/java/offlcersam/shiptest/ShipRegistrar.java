@@ -74,7 +74,7 @@ public final class ShipRegistrar {
         float carg = 75.0F * cargoMod;
 
         writeShip(
-                350,                         //Int: ID, unique ship ID
+                350,                         // Int: ID, unique ship ID
                 30,                             // Int: Icon, sets Icon according to sprite sheet.
                 Color.AZURE,                    // Color: Color, unsure what exactly this affects.
                 "Arrowhead",                    // String: Display name

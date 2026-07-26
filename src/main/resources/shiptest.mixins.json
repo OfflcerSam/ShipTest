@@ -7,7 +7,8 @@
     "MainSetupMixin",
     "CraftingRegistrarMixin",
     "PlayerMixin",
-    "ShipListMixin"
+    "ShipListMixin",
+    "GraphicsLoaderMixin"
   ],
   "injectors": {
     "defaultRequire": 1

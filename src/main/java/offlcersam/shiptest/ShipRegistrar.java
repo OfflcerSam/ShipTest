@@ -1,5 +1,6 @@
 package offlcersam.shiptest;
 
+import game.weapons.WeaponSlotLayoutList;
 import illuminatus.core.graphics.Color;
 import items.ItemTypeConstantsInterface;
 import items.TypeTag;
@@ -81,7 +82,7 @@ public final class ShipRegistrar {
                 "Maybe one day you could be a real arrow.", // String: Display description
                 0,                              // Int: Tier, affects spawning and what level it's usable at.
                 TypeTag.UNCOMMON,               // TypeTag, Affects spawning and loot drop, I think.
-                350,                            // Int: Render Index, the ship's sprite, currently there is a index limit somewhere near 350-400 until it is upped.
+                350,                            // Int: Render Index, the ship's sprite, currently there is a index limit at 376 in vanilla.
                 37,                             // Int: Engine Position glow in pixels
                 integ * 1.50F,                  // Float: Hull HP (integ * multiplier), somewhat based off ShipList style of doing it.
                 carg * 1.10F,                   // Float: Cargo (carg * multiplier), also based off ShipList style of doing it.
@@ -93,6 +94,11 @@ public final class ShipRegistrar {
                 1,                              // Int: Module slots
                 1                               // Int: Engine slots
         );
+
+        // ID testing, Max ID is 1999. 2000 it will be equipped as null.
+        integ = 1000.0F;
+        carg = 1000.0F * cargoMod * 5.0F;
+        writeShip(1999, 216, Color.PURPLE, "GodShip", "What the hell!", 0, TypeTag.EXOTIC, 1999, 64, integ * 1.5F, carg * 1.5F, WeaponSlotLayoutList.S_10_T, 9, 9, 9, 9, 9, 9);
 
         integ = 225.0F;
         carg = 350.0F * cargoMod * 2.0F;

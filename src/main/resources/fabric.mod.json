@@ -12,6 +12,7 @@
 
   "depends": {
     "fabricloader": ">=0.18.4",
-    "java": ">=25"
+    "java": ">=25",
+    "sector-space": ">=0.5.9.6"
   }
 }

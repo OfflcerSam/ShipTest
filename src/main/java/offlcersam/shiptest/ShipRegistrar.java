@@ -125,7 +125,7 @@ public final class ShipRegistrar {
         */
         NPCRegistrar.registerTieredMob(0, 350, 5); // Arrowhead can appear as a tier-0 NPC
         NPCRegistrar.registerPolice(350, 1); // Arrowhead as police spawn example.
-        NPCRegistrar.registerRogueDrone(1, 350, 3, ROGUE_GEAR_TIER1_A); // Arrowhead as tier 1 rogue drone with the loadout Tier1A
+        NPCRegistrar.registerRogueDrone(1, 350, 1, ROGUE_GEAR_TIER1_A); // Arrowhead as tier 1 rogue drone with the loadout Tier1A
         NPCRegistrar.registerTieredMob(4, 40, 4);
         NPCRegistrar.registerTieredMob(5, 41, 3);
         NPCRegistrar.registerBoss(4, 41, 2);   // Foundry+ can appear as a tier-4 sector boss

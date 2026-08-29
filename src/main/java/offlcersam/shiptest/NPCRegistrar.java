@@ -1,6 +1,9 @@
 package offlcersam.shiptest;
 
+import _database.NameDatabase;
 import game.world.SectorGenerator;
+import game.objects.SpaceShip;
+import offlcersam.shiptest.mixin.SpawnNPCAccessor;
 import illuminatus.core.tools.util.Random;
 import mods.ModLogger;
 
@@ -36,6 +39,19 @@ public final class NPCRegistrar {
     // Vanilla ticket count for spawnTempPoliceMob(...): rngSelection(20,20,20,19) is a
     // 4-entry pool (3 tickets ship 20, 1 ticket ship 19). Used for temp/escort police groups.
     private static final int VANILLA_TEMP_POLICE_POOL_SIZE = 4;
+
+    // bucket 0-4, where 4 means "tier 4 or higher" - matches Utils.constrain(0,tier,5) collapsing
+    // tiers 4 and 5 into the same default case in both spawnRogueDrones and spawnTempRogueDrones.
+    private static final Map<Integer, List<Integer>> ROGUE_DRONE_POOL = new HashMap<>();
+
+    // Custom ship base ID -> the gear preset it should use, since vanilla's configRogueDrone(...)
+    // keys entirely off the literal ship id and falls back to weak tier-0 gear for anything else.
+    private static final Map<Integer, RogueDroneGear> ROGUE_DRONE_GEAR = new HashMap<>();
+
+    // Range sizes (highestShipIndex - lowestShipIndex + 1) per bucket, counted from both
+    // spawnRogueDrones and spawnTempRogueDrones (they use identical range tables).
+    // bucket:                              0  1  2  3  4+
+    private static final int[] VANILLA_ROGUE_DRONE_POOL_SIZE = { 4, 4, 5, 5, 5 };
 
     private static final ThreadLocal<Integer> STASHED_TIER = ThreadLocal.withInitial(() -> 0);
 
@@ -129,6 +145,100 @@ public final class NPCRegistrar {
         int totalTickets = VANILLA_TEMP_POLICE_POOL_SIZE + POLICE_POOL.size();
         int roll = rng().nextInt(totalTickets);
         return roll < VANILLA_TEMP_POLICE_POOL_SIZE ? vanillaShipId : POLICE_POOL.get(roll - VANILLA_TEMP_POLICE_POOL_SIZE);
+    }
+
+    // Mirrors the fields configRogueDrone() assigns per vanilla ship id.
+    // LevelMin/levelMax feed classSkill.set(), creditMin/creditMax feed cargo.setCurrency().
+    public record RogueDroneGear(
+            int tier,
+            int weaponLaser,
+            int weaponBay,
+            int energyFullID,
+            int levelMin,
+            int levelMax,
+            long creditMin,
+            long creditMax
+    ) { }
+
+    // Presets from configRogueDrone's 9 cases (shipId 181-189), for reference.
+    // e.g. NPCRegistrar.registerRogueDrone(2, myShipId, 1, NPCRegistrar.ROGUE_GEAR_TIER2_B).
+    public static final RogueDroneGear ROGUE_GEAR_TIER0    = new RogueDroneGear(0, 302610000, 302610000, 709010000, 1, 2, 200, 400);
+    public static final RogueDroneGear ROGUE_GEAR_TIER1_A  = new RogueDroneGear(1, 302620000, 306170000, 709020000, 2, 4, 400, 600);
+    public static final RogueDroneGear ROGUE_GEAR_TIER1_B  = new RogueDroneGear(1, 302620000, 306170000, 709020000, 4, 6, 600, 800);
+    public static final RogueDroneGear ROGUE_GEAR_TIER2_A  = new RogueDroneGear(2, 302630000, 306180000, 709030000, 7, 9, 800, 1000);
+    public static final RogueDroneGear ROGUE_GEAR_TIER2_B  = new RogueDroneGear(2, 302630000, 306180000, 709030000, 10, 12, 1000, 1500);
+    public static final RogueDroneGear ROGUE_GEAR_TIER2_C  = new RogueDroneGear(2, 302640000, 306180000, 709040000, 13, 15, 1500, 3000);
+    public static final RogueDroneGear ROGUE_GEAR_TIER3_A  = new RogueDroneGear(3, 302640000, 306190000, 709040000, 16, 18, 3000, 6000);
+    public static final RogueDroneGear ROGUE_GEAR_TIER3_B  = new RogueDroneGear(3, 302640000, 306190000, 709050000, 20, 23, 6000, 9000);
+    public static final RogueDroneGear ROGUE_GEAR_TIER3_C  = new RogueDroneGear(3, 302640000, 306190000, 709050000, 25, 28, 9000, 12000);
+
+    /**
+     * Makes a ship eligible to spawn as a rogue drone in the given tier (0-4, where 4 covers tier 4+).
+     * Gear controls its loadout, credit drop, and level, since without an override it would otherwise fall into vanilla's tier-0 default gear (see class comment on RogueDroneGear).
+     */
+    public static void registerRogueDrone(int tier, int shipBaseId, int weight, RogueDroneGear gear) {
+        int bucket = rogueDroneBucket(tier);
+        List<Integer> pool = ROGUE_DRONE_POOL.computeIfAbsent(bucket, b -> new ArrayList<>());
+        for (int i = 0; i < Math.max(1, weight); i++) {
+            pool.add(shipBaseId);
+        }
+        ROGUE_DRONE_GEAR.put(shipBaseId, gear);
+        ModLogger.log("[ShipTest] Registered ship " + shipBaseId + " as rogue drone (tier " + tier + " -> bucket " + bucket + ", weight " + weight + ")");
+    }
+
+    // Maps a tier value to the 0-4 bucket vanilla's Utils.constrain(0,tier,5) switch uses.
+    public static int rogueDroneBucket(int tier) {
+        int clamped = Math.max(0, Math.min(tier, 5));
+        return Math.min(clamped, 4);
+    }
+
+    // Called from SpawnNPCMixin right after the vanilla range roll in spawnRogueDrones/spawnTempRogueDrones.
+    public static int rollRogueDrone(int bucket, int vanillaShipId) {
+        List<Integer> pool = ROGUE_DRONE_POOL.get(bucket);
+        if (pool == null || pool.isEmpty()) {
+            return vanillaShipId;
+        }
+        int vanillaTickets = VANILLA_ROGUE_DRONE_POOL_SIZE[Math.max(0, Math.min(bucket, VANILLA_ROGUE_DRONE_POOL_SIZE.length - 1))];
+        int totalTickets = vanillaTickets + pool.size();
+        int roll = rng().nextInt(totalTickets);
+        return roll < vanillaTickets ? vanillaShipId : pool.get(roll - vanillaTickets);
+    }
+
+    public static boolean isCustomRogueDrone(int shipId) {
+        return ROGUE_DRONE_GEAR.containsKey(shipId);
+    }
+
+    // Called from SpawnNPCMixin instead of vanilla configRogueDrone() when shipId is one of ours,
+    // reproduces configRogueDrone's tail exactly with our configured gear.
+    public static void configureCustomRogueDrone(int shipId, SpaceShip tempShip) {
+        RogueDroneGear gear = ROGUE_DRONE_GEAR.get(shipId);
+        if (gear == null) {
+            return;
+        }
+        SpawnNPCAccessor.invokePopulateShipGear(tempShip, gear.tier(), 6, false);
+        tempShip.hull.energySlots.removeAll();
+        tempShip.hull.equipEnergy(gear.energyFullID(), tempShip.hull.energySlots.numberOf());
+        tempShip.hull.weaponSlots.removeAll();
+        int i = 0;
+        while (i < tempShip.hull.weaponSlots.numberOf()) {
+            if (rng().nextInt(2) == 1) {
+                tempShip.hull.equipWeapon(gear.weaponBay(), 1);
+            } else {
+                tempShip.hull.equipWeapon(gear.weaponLaser(), 1);
+            }
+            i++;
+        }
+        int level = gear.levelMin() + rng().nextInt(gear.levelMax() - gear.levelMin() + 1);
+        switch (rng().nextInt(9)) {
+            case 0: tempShip.classSkill.set(level, 2); break;
+            case 1: tempShip.classSkill.set(level, 1); break;
+            case 2: tempShip.classSkill.set(level, 4); break;
+            case 3: tempShip.classSkill.set(level, 3); break;
+            default: tempShip.classSkill.set(level, 0);
+        }
+        long creditDrop = gear.creditMin() + rng().nextInt((int) (gear.creditMax() - gear.creditMin() + 1));
+        tempShip.cargo.setCurrency(creditDrop);
+        tempShip.setCustomTag(NameDatabase.getRandomMachineShipName());
     }
 
     // Reuses the world's seeded RNG (same one vanilla spawn code uses) rather than a fresh

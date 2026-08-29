@@ -10,6 +10,7 @@ import mods.ModLogger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static offlcersam.shiptest.NPCRegistrar.ROGUE_GEAR_TIER0;
 import static offlcersam.shiptest.WeaponLayoutList.*;
 
 public final class ShipRegistrar {
@@ -113,6 +114,7 @@ public final class ShipRegistrar {
          * registerTieredMob(tier, shipBaseId, weight)
          * registerBoss(sectorTier, shipBaseId, weight)
          * registerPolice(shipBaseId, weight)
+         * registerRogueDrone(tier, shipBaseId, weight, RogueDroneGear)
          * <p>
          * Weight is denominated in "vanilla ships' worth of likelihood" for that tier.
          * Vanilla's tier lists hold 8-19 roughly-equal-weight candidates (see VANILLA_MOB_POOL_SIZE), so:
@@ -121,8 +123,9 @@ public final class ShipRegistrar {
          * weight = VANILLA_MOB_POOL_SIZE[tier] - roughly 50/50 vs the entire vanilla list
          * weight above that                    - starts crowding vanilla ships out of that tier
         */
-        NPCRegistrar.registerTieredMob(0, 350, 5);  // Arrowhead can appear as a tier-0 NPC
-        NPCRegistrar.registerPolice(350, 1);            // Arrowhead as police spawn example.
+        NPCRegistrar.registerTieredMob(0, 350, 5); // Arrowhead can appear as a tier-0 NPC
+        NPCRegistrar.registerPolice(350, 1); // Arrowhead as police spawn example.
+        NPCRegistrar.registerRogueDrone(0, 350, 3, ROGUE_GEAR_TIER0); // Arrowhead as tier 0 rogue drone with rogue_gear_tier0
         NPCRegistrar.registerTieredMob(4, 40, 4);
         NPCRegistrar.registerTieredMob(5, 41, 3);
         NPCRegistrar.registerBoss(4, 41, 2);   // Foundry+ can appear as a tier-4 sector boss

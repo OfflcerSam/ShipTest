@@ -9,7 +9,8 @@
     "PlayerMixin",
     "ShipListMixin",
     "GraphicsLoaderMixin",
-    "SpawnNPCMixin"
+    "SpawnNPCMixin",
+    "SpawnNPCAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

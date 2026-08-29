@@ -15,19 +15,19 @@ import static offlcersam.shiptest.WeaponLayoutList.*;
 public final class ShipRegistrar {
     private static boolean registered;
 
-    // Stores the base IDs of every weapon we add
+    /** Stores the base IDs of every weapon we add. */
     private static final List<Integer> REGISTERED_SHIP_IDS = new ArrayList<>();
 
     private ShipRegistrar() { }
 
-    // Registers a ship ID and remembers it for later use.
+    /** Registers a ship ID and remembers it for later use. */
     private static int registerShipID(int id) {
         REGISTERED_SHIP_IDS.add(id);
         ModLogger.log("[ShipTest] Added ship ID to registry: " + id);
         return id;
     }
 
-    // Returns database ID for all ships.
+    /** Returns database ID for all ships. */
     public static int[] getShipDatabaseIDs() {
         int[] ids = new int[REGISTERED_SHIP_IDS.size()];
 
@@ -37,7 +37,7 @@ public final class ShipRegistrar {
         return ids;
     }
 
-    // Custom registration helper.
+    /** Custom ship registration helper. */
     private static void writeShip(int id, int icon, Color color, String name, String description, int tier, TypeTag rarity, int renderIndex, int engineDisplacement, float hull, float cargo, int weaponLayout, int energySlots, int armorSlots, int shieldSlots, int deviceSlots, int moduleSlots, int engineSlots)
     {
         ShipList.write(
@@ -64,7 +64,7 @@ public final class ShipRegistrar {
 
 
 
-
+    /** Ship registering. */
     public static void registerShips() {
         if (registered) { return; }
         registered = true;
@@ -107,7 +107,7 @@ public final class ShipRegistrar {
 
 
         ShipList.loadShipStatsFromItems(_database.ItemDatabase.itemDataFile);
-        
+
         /*
          * Opt individual ships into NPC/boss spawn pools here.
          * registerTieredMob(tier, shipBaseId, weight)

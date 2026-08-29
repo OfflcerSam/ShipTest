@@ -17,6 +17,15 @@ public final class NPCRegistrar {
     // sector tier (0-6+) -> pool of custom ship base IDs
     private static final Map<Integer, List<Integer>> BOSS_POOL = new HashMap<>();
 
+    // Vanilla candidate count per tier, counted directly from the rngSelection() lists in
+    // _database.SpawnNPC.spawnTieredMob's tier switch.
+    // tier: 0, 1, 2, 3, 4, 5
+    private static final int[] VANILLA_MOB_POOL_SIZE   = { 19, 19, 14, 12, 8, 8 };
+
+    // Vanilla candidate count per sector tier, counted from spawnBoss(Sector,int) switch case.
+    // sector tier: 0, 1, 2, 3, 4, 5, 6+
+    private static final int[] VANILLA_BOSS_POOL_SIZE  = { 5, 6, 8, 15, 15, 13, 15 };
+
     private static final ThreadLocal<Integer> STASHED_TIER = ThreadLocal.withInitial(() -> 0);
 
     private NPCRegistrar() { }
@@ -62,9 +71,10 @@ public final class NPCRegistrar {
         if (pool == null || pool.isEmpty()) {
             return vanillaShipId;
         }
-        int totalTickets = 1 + pool.size();
+        int vanillaTickets = VANILLA_MOB_POOL_SIZE[Math.max(0, Math.min(tier, VANILLA_MOB_POOL_SIZE.length - 1))];
+        int totalTickets = vanillaTickets + pool.size();
         int roll = rng().nextInt(totalTickets);
-        return roll == 0 ? vanillaShipId : pool.get(roll - 1);
+        return roll < vanillaTickets ? vanillaShipId : pool.get(roll - vanillaTickets);
     }
 
     // Called from SpawnNPCMixin right after the vanilla sector-tier switch in spawnBoss(Sector,int).
@@ -73,9 +83,10 @@ public final class NPCRegistrar {
         if (pool == null || pool.isEmpty()) {
             return vanillaShipId;
         }
-        int totalTickets = 1 + pool.size();
+        int vanillaTickets = VANILLA_BOSS_POOL_SIZE[Math.max(0, Math.min(sectorTier, VANILLA_BOSS_POOL_SIZE.length - 1))];
+        int totalTickets = vanillaTickets + pool.size();
         int roll = rng().nextInt(totalTickets);
-        return roll == 0 ? vanillaShipId : pool.get(roll - 1);
+        return roll < vanillaTickets ? vanillaShipId : pool.get(roll - vanillaTickets);
     }
 
     // Reuses the world's seeded RNG (same one vanilla spawn code uses) rather than a fresh

@@ -111,9 +111,17 @@ public final class ShipRegistrar {
         // Opt individual ships into NPC/boss spawn pools here.
         // registerTieredMob(tier, shipBaseId, weight)
         // registerBoss(sectorTier, shipBaseId, weight)
-        NPCRegistrar.registerTieredMob(0, 350, 1); // Arrowhead can appear as a tier-0 NPC
-        NPCRegistrar.registerTieredMob(0, 40, 1);
-        NPCRegistrar.registerTieredMob(0, 41, 1);
+        /**
+         * Weight is denominated in "vanilla ships' worth of likelihood" for that tier.
+         * Vanilla's tier lists hold 8-19 roughly-equal-weight candidates (see VANILLA_MOB_POOL_SIZE), so:
+         * weight 1                             - as rare as any single vanilla ship in that tier
+         * weight 3-5                           - noticeably more common, still a minority overall
+         * weight = VANILLA_MOB_POOL_SIZE[tier] - roughly 50/50 vs the entire vanilla list
+         * weight above that                    - starts crowding vanilla ships out of that tier
+        */
+        NPCRegistrar.registerTieredMob(0, 350, 3); // Arrowhead can appear as a tier-0 NPC
+        NPCRegistrar.registerTieredMob(4, 40, 2);
+        NPCRegistrar.registerTieredMob(5, 41, 2);
         NPCRegistrar.registerBoss(4, 41, 1);  // Foundry+ can appear as a tier-4 sector boss
 
         ModLogger.log("[ShipTest] Registered " + REGISTERED_SHIP_IDS.size() + " ships");

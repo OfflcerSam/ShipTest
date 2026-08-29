@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = SpawnNPC.class, remap = false)
 public class SpawnNPCMixin {
 
+    // TIERED NPC SPAWNING
     @Inject(
             method = "spawnTieredMob(IIILgame/world/Sector;ZIIZII)Lilluminatus/core/datastructures/List;",
             at = @At("HEAD")
@@ -40,6 +41,7 @@ public class SpawnNPCMixin {
         return SpawnMacro.generateShip(xPos, yPos, sector, hostilityConstant, rolled, factionIndex);
     }
 
+    // POLICE SPAWNING
     @Redirect(
             method = "spawnPolice(Lgame/world/Sector;I)V",
             at = @At(
@@ -68,6 +70,8 @@ public class SpawnNPCMixin {
         return SpawnMacro.generateShip(xPos, yPos, sector, hostilityConstant, rolled, factionIndex);
     }
 
+    // DRONE SPAWNING
+    /*
     @Redirect(
             method = "spawnRogueDrones(Lgame/world/Sector;III)V",
             at = @At(
@@ -128,8 +132,9 @@ public class SpawnNPCMixin {
         } else {
             SpawnNPCAccessor.invokeConfigRogueDrone(shipId, tempShip);
         }
-    }
+    }*/
 
+    // BOSS SPAWNING
     @Redirect(
             method = "spawnBoss(Lgame/world/Sector;I)V",
             at = @At(

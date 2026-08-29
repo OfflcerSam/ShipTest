@@ -36,22 +36,21 @@ public final class NPCRegistrar {
     // outcomes (1 ticket rolls ship 19, the other 4 roll ship 90).
     private static final int VANILLA_POLICE_POOL_SIZE = 5;
 
-    // Vanilla ticket count for spawnTempPoliceMob(...): rngSelection(20,20,20,19) is a
+    // Vanilla ticket count for spawnTempPoliceMob(): rngSelection(20,20,20,19) is a
     // 4-entry pool (3 tickets ship 20, 1 ticket ship 19). Used for temp/escort police groups.
     private static final int VANILLA_TEMP_POLICE_POOL_SIZE = 4;
 
-    // bucket 0-4, where 4 means "tier 4 or higher" - matches Utils.constrain(0,tier,5) collapsing
+    // bucket 0-4, where 4 means "tier 4 or higher", matches Utils.constrain(0,tier,5) collapsing
     // tiers 4 and 5 into the same default case in both spawnRogueDrones and spawnTempRogueDrones.
-    private static final Map<Integer, List<Integer>> ROGUE_DRONE_POOL = new HashMap<>();
+    // private static final Map<Integer, List<Integer>> ROGUE_DRONE_POOL = new HashMap<>();
 
-    // Custom ship base ID -> the gear preset it should use, since vanilla's configRogueDrone(...)
-    // keys entirely off the literal ship id and falls back to weak tier-0 gear for anything else.
-    private static final Map<Integer, RogueDroneGear> ROGUE_DRONE_GEAR = new HashMap<>();
+    // Custom ship base ID to the gear preset it should use, since vanilla's configRogueDrone()
+    // keys entirely off the literal ship id and falls back to tier-0 gear for anything else.
+    // private static final Map<Integer, RogueDroneGear> ROGUE_DRONE_GEAR = new HashMap<>();
 
-    // Range sizes (highestShipIndex - lowestShipIndex + 1) per bucket, counted from both
-    // spawnRogueDrones and spawnTempRogueDrones (they use identical range tables).
-    // bucket:                              0  1  2  3  4+
-    private static final int[] VANILLA_ROGUE_DRONE_POOL_SIZE = { 4, 4, 5, 5, 5 };
+    // Range sizes (highestShipIndex - lowestShipIndex + 1) per bucket, counted from both spawnRogueDrones and spawnTempRogueDrones (they use identical range tables).
+    // bucket: 0, 1, 2, 3, 4+
+    // private static final int[] VANILLA_ROGUE_DRONE_POOL_SIZE = { 4, 4, 5, 5, 5 };
 
     private static final ThreadLocal<Integer> STASHED_TIER = ThreadLocal.withInitial(() -> 0);
 
@@ -147,6 +146,7 @@ public final class NPCRegistrar {
         return roll < VANILLA_TEMP_POLICE_POOL_SIZE ? vanillaShipId : POLICE_POOL.get(roll - VANILLA_TEMP_POLICE_POOL_SIZE);
     }
 
+    /*
     // Mirrors the fields configRogueDrone() assigns per vanilla ship id.
     // LevelMin/levelMax feed classSkill.set(), creditMin/creditMax feed cargo.setCurrency().
     public record RogueDroneGear(
@@ -172,10 +172,11 @@ public final class NPCRegistrar {
     public static final RogueDroneGear ROGUE_GEAR_TIER3_B  = new RogueDroneGear(3, 302640000, 306190000, 709050000, 20, 23, 6000, 9000);
     public static final RogueDroneGear ROGUE_GEAR_TIER3_C  = new RogueDroneGear(3, 302640000, 306190000, 709050000, 25, 28, 9000, 12000);
 
-    /**
+
+
      * Makes a ship eligible to spawn as a rogue drone in the given tier (0-4, where 4 covers tier 4+).
      * Gear controls its loadout, credit drop, and level, since without an override it would otherwise fall into vanilla's tier-0 default gear (see class comment on RogueDroneGear).
-     */
+
     public static void registerRogueDrone(int tier, int shipBaseId, int weight, RogueDroneGear gear) {
         int bucket = rogueDroneBucket(tier);
         List<Integer> pool = ROGUE_DRONE_POOL.computeIfAbsent(bucket, b -> new ArrayList<>());
@@ -240,6 +241,7 @@ public final class NPCRegistrar {
         tempShip.cargo.setCurrency(creditDrop);
         tempShip.setCustomTag(NameDatabase.getRandomMachineShipName());
     }
+    */
 
     // Reuses the world's seeded RNG (same one vanilla spawn code uses) rather than a fresh
     // Random, so this doesn't affect world-gen determinism.

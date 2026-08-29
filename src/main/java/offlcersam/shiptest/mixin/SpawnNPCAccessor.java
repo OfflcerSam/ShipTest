@@ -5,8 +5,7 @@ import game.objects.SpaceShip;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-// As populateShipGear() and configRogueDrone() are both PRIVATE static methods on SpawnNPC,
-// calling code (like NPCRegistrar) can't reach them directly.
+// As populateShipGear() and configRogueDrone() are both PRIVATE static methods on SpawnNPC, calling code (like NPCRegistrar) can't reach them directly.
 // This interface mixin lets Mixin generate bridge methods into SpawnNPC at weave time so it can be called from outside the class.
 // The method bodies below are never actually run as Mixin replaces them.
 @Mixin(value = SpawnNPC.class, remap = false)

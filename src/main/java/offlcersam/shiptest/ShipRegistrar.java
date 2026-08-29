@@ -114,7 +114,7 @@ public final class ShipRegistrar {
          * registerTieredMob(tier, shipBaseId, weight)
          * registerBoss(sectorTier, shipBaseId, weight)
          * registerPolice(shipBaseId, weight)
-         * registerRogueDrone(tier, shipBaseId, weight, RogueDroneGear)
+         * registerRogueDrone(tier, shipBaseId, weight, RogueDroneGear) - disabled for the moment
          * <p>
          * Weight is denominated in "vanilla ships' worth of likelihood" for that tier.
          * Vanilla's tier lists hold 8-19 roughly-equal-weight candidates (see VANILLA_MOB_POOL_SIZE), so:
@@ -125,7 +125,7 @@ public final class ShipRegistrar {
         */
         NPCRegistrar.registerTieredMob(0, 350, 5); // Arrowhead can appear as a tier-0 NPC
         NPCRegistrar.registerPolice(350, 1); // Arrowhead as police spawn example.
-        NPCRegistrar.registerRogueDrone(1, 350, 1, ROGUE_GEAR_TIER1_A); // Arrowhead as tier 1 rogue drone with the loadout Tier1A
+        //NPCRegistrar.registerRogueDrone(1, 350, 1, ROGUE_GEAR_TIER1_A); // Arrowhead as tier 1 rogue drone with the loadout Tier1A
         NPCRegistrar.registerTieredMob(4, 40, 4);
         NPCRegistrar.registerTieredMob(5, 41, 3);
         NPCRegistrar.registerBoss(4, 41, 2);   // Foundry+ can appear as a tier-4 sector boss

@@ -41,6 +41,34 @@ public class SpawnNPCMixin {
     }
 
     @Redirect(
+            method = "spawnPolice(Lgame/world/Sector;I)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "L_database/SpawnMacro;generateShip(IILgame/world/Sector;III)Lgame/objects/SpaceShip;"
+            )
+    )
+    private static SpaceShip shiptest$redirectPoliceShip(int xPos, int yPos, Sector sector,
+                                                         int hostilityConstant, int spawnIndex,
+                                                         int factionIndex) {
+        int rolled = NPCRegistrar.rollPolice(spawnIndex);
+        return SpawnMacro.generateShip(xPos, yPos, sector, hostilityConstant, rolled, factionIndex);
+    }
+
+    @Redirect(
+            method = "spawnTempPoliceMob(IIILgame/world/Sector;)Lilluminatus/core/datastructures/List;",
+            at = @At(
+                    value = "INVOKE",
+                    target = "L_database/SpawnMacro;generateShip(IILgame/world/Sector;III)Lgame/objects/SpaceShip;"
+            )
+    )
+    private static SpaceShip shiptest$redirectTempPoliceShip(int xPos, int yPos, Sector sector,
+                                                             int hostilityConstant, int spawnIndex,
+                                                             int factionIndex) {
+        int rolled = NPCRegistrar.rollTempPolice(spawnIndex);
+        return SpawnMacro.generateShip(xPos, yPos, sector, hostilityConstant, rolled, factionIndex);
+    }
+
+    @Redirect(
             method = "spawnBoss(Lgame/world/Sector;I)V",
             at = @At(
                     value = "INVOKE",

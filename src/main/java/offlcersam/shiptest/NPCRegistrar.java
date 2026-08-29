@@ -26,6 +26,17 @@ public final class NPCRegistrar {
     // sector tier: 0, 1, 2, 3, 4, 5, 6+
     private static final int[] VANILLA_BOSS_POOL_SIZE  = { 5, 6, 8, 15, 15, 13, 15 };
 
+    // Pool of custom ship base IDs eligible to replace vanilla police spawns (not tiered).
+    private static final List<Integer> POLICE_POOL = new ArrayList<>();
+
+    // Vanilla ticket count for spawnPolice(Sector,int): rngVal(0,4) has 5 equally-likely
+    // outcomes (1 ticket rolls ship 19, the other 4 roll ship 90).
+    private static final int VANILLA_POLICE_POOL_SIZE = 5;
+
+    // Vanilla ticket count for spawnTempPoliceMob(...): rngSelection(20,20,20,19) is a
+    // 4-entry pool (3 tickets ship 20, 1 ticket ship 19). Used for temp/escort police groups.
+    private static final int VANILLA_TEMP_POLICE_POOL_SIZE = 4;
+
     private static final ThreadLocal<Integer> STASHED_TIER = ThreadLocal.withInitial(() -> 0);
 
     private NPCRegistrar() { }
@@ -87,6 +98,37 @@ public final class NPCRegistrar {
         int totalTickets = vanillaTickets + pool.size();
         int roll = rng().nextInt(totalTickets);
         return roll < vanillaTickets ? vanillaShipId : pool.get(roll - vanillaTickets);
+    }
+
+    /**
+     * Makes a ship eligible to appear as police spawn. (Both single spawnPolice roll and the grouped spawnTempPoliceMob roll share this pool).
+     * Not tiered, as police spawns are not tier-gated, but same weighting mechanic as the registerTieredMob/registerBoss.
+     */
+    public static void registerPolice(int shipBaseId, int weight) {
+        for (int i = 0; i < Math.max(1, weight); i++) {
+            POLICE_POOL.add(shipBaseId);
+        }
+        ModLogger.log("[ShipTest] Registered ship " + shipBaseId + " as police spawn (weight " + weight + ")");
+    }
+
+    // Called from SpawnNPCMixin right after spawnPolice's switch converges on a chosen ship id.
+    public static int rollPolice(int vanillaShipId) {
+        if (POLICE_POOL.isEmpty()) {
+            return vanillaShipId;
+        }
+        int totalTickets = VANILLA_POLICE_POOL_SIZE + POLICE_POOL.size();
+        int roll = rng().nextInt(totalTickets);
+        return roll < VANILLA_POLICE_POOL_SIZE ? vanillaShipId : POLICE_POOL.get(roll - VANILLA_POLICE_POOL_SIZE);
+    }
+
+    // Called from SpawnNPCMixin right after spawnTempPoliceMob's per-iteration roll.
+    public static int rollTempPolice(int vanillaShipId) {
+        if (POLICE_POOL.isEmpty()) {
+            return vanillaShipId;
+        }
+        int totalTickets = VANILLA_TEMP_POLICE_POOL_SIZE + POLICE_POOL.size();
+        int roll = rng().nextInt(totalTickets);
+        return roll < VANILLA_TEMP_POLICE_POOL_SIZE ? vanillaShipId : POLICE_POOL.get(roll - VANILLA_TEMP_POLICE_POOL_SIZE);
     }
 
     // Reuses the world's seeded RNG (same one vanilla spawn code uses) rather than a fresh

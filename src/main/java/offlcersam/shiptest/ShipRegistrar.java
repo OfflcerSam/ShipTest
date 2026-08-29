@@ -10,7 +10,7 @@ import mods.ModLogger;
 import java.util.ArrayList;
 import java.util.List;
 
-import static offlcersam.shiptest.NPCRegistrar.ROGUE_GEAR_TIER0;
+import static offlcersam.shiptest.NPCRegistrar.*;
 import static offlcersam.shiptest.WeaponLayoutList.*;
 
 public final class ShipRegistrar {
@@ -125,7 +125,7 @@ public final class ShipRegistrar {
         */
         NPCRegistrar.registerTieredMob(0, 350, 5); // Arrowhead can appear as a tier-0 NPC
         NPCRegistrar.registerPolice(350, 1); // Arrowhead as police spawn example.
-        NPCRegistrar.registerRogueDrone(0, 350, 3, ROGUE_GEAR_TIER0); // Arrowhead as tier 0 rogue drone with rogue_gear_tier0
+        NPCRegistrar.registerRogueDrone(1, 350, 3, ROGUE_GEAR_TIER1_A); // Arrowhead as tier 1 rogue drone with the loadout Tier1A
         NPCRegistrar.registerTieredMob(4, 40, 4);
         NPCRegistrar.registerTieredMob(5, 41, 3);
         NPCRegistrar.registerBoss(4, 41, 2);   // Foundry+ can appear as a tier-4 sector boss

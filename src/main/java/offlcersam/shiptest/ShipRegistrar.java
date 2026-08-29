@@ -121,11 +121,11 @@ public final class ShipRegistrar {
          * weight = VANILLA_MOB_POOL_SIZE[tier] - roughly 50/50 vs the entire vanilla list
          * weight above that                    - starts crowding vanilla ships out of that tier
         */
-        NPCRegistrar.registerTieredMob(0, 350, 4); // Arrowhead can appear as a tier-0 NPC
-        NPCRegistrar.registerPolice(350, 1);
+        NPCRegistrar.registerTieredMob(0, 350, 4);  // Arrowhead can appear as a tier-0 NPC
+        NPCRegistrar.registerPolice(350, 1);            // Arrowhead as police spawn example.
         NPCRegistrar.registerTieredMob(4, 40, 3);
         NPCRegistrar.registerTieredMob(5, 41, 2);
-        NPCRegistrar.registerBoss(4, 41, 1);  // Foundry+ can appear as a tier-4 sector boss
+        NPCRegistrar.registerBoss(4, 41, 1);   // Foundry+ can appear as a tier-4 sector boss
 
         ModLogger.log("[ShipTest] Registered " + REGISTERED_SHIP_IDS.size() + " ships");
     }

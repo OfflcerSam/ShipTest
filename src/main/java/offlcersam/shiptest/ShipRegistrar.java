@@ -107,6 +107,15 @@ public final class ShipRegistrar {
 
 
         ShipList.loadShipStatsFromItems(_database.ItemDatabase.itemDataFile);
+
+        // Opt individual ships into NPC/boss spawn pools here.
+        // registerTieredMob(tier, shipBaseId, weight)
+        // registerBoss(sectorTier, shipBaseId, weight)
+        NPCRegistrar.registerTieredMob(0, 350, 1); // Arrowhead can appear as a tier-0 NPC
+        NPCRegistrar.registerTieredMob(0, 40, 1);
+        NPCRegistrar.registerTieredMob(0, 41, 1);
+        NPCRegistrar.registerBoss(4, 41, 1);  // Foundry+ can appear as a tier-4 sector boss
+
         ModLogger.log("[ShipTest] Registered " + REGISTERED_SHIP_IDS.size() + " ships");
     }
 }

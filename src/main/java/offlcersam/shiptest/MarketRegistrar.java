@@ -15,6 +15,7 @@ public final class MarketRegistrar {
 
     private MarketRegistrar() { }
 
+    // Lazily adds all ships to every market tier for the moment, probably won't change until the next update.
     public static void registerMarkets() {
         if (registered) { return; }
         registered = true;

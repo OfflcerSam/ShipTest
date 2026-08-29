@@ -16,6 +16,7 @@ public class GraphicsLoaderMixin {
             ),
             index = 0
     )
+    // There is no max to this in theory, but I've set it to the same ID limit.
     private int changeShipTextureAmount(int amount) {
         return 2000;
     }

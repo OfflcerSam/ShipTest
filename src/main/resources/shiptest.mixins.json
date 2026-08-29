@@ -8,7 +8,8 @@
     "CraftingRegistrarMixin",
     "PlayerMixin",
     "ShipListMixin",
-    "GraphicsLoaderMixin"
+    "GraphicsLoaderMixin",
+    "SpawnNPCMixin"
   ],
   "injectors": {
     "defaultRequire": 1

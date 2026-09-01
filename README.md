@@ -1,3 +1,10 @@
+## Note
+All work for these will be continued elsewhere:
+https://github.com/OfflcerSam/ShipUtil
+https://github.com/OfflcerSam/WeaponUtil
+
+## End Note
+
 Adds a ship to Sector Space, this is not a serious mod just a proof of concept. 
 
 You might need to delete the market_data and item_data at Sector Space\resources\data for it to appear on the markets, though I'm not entirely sure.
